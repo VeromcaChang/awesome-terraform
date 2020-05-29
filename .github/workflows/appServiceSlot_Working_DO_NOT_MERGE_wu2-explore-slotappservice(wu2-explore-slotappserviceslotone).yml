@@ -1,0 +1,35 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy ASP.Net Core app to Azure Web App - wu2-explore-slotappservice(wu2-explore-slotappserviceslotone)
+
+on:
+  push:
+    branches:
+      - appServiceSlot_Working_DO_NOT_MERGE
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@master
+
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '2.1.804'
+
+    - name: Build with dotnet
+      run: dotnet build --configuration Release
+
+    - name: dotnet publish
+      run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v1
+      with:
+        app-name: 'wu2-explore-slotappservice(wu2-explore-slotappserviceslotone)'
+        slot-name: 'wu2-explore-slotappserviceslotone'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_db9783b3c1b84f0e8d721681283c45c4 }}
+        package: ${{env.DOTNET_ROOT}}/myapp 
